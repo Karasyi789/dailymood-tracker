@@ -121,7 +121,7 @@ class _HomePageState extends State<HomePage> {
                     icon: Icon(Icons.save),
                     label: Text('Simpan'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.teal,
+                      backgroundColor: const Color.fromARGB(255, 97, 157, 151),
                       foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -137,7 +137,7 @@ class _HomePageState extends State<HomePage> {
                     icon: Icon(Icons.history),
                     label: Text('Riwayat'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blueGrey[700],
+                      backgroundColor: const Color.fromARGB(255, 119, 199, 179),
                       foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -153,7 +153,7 @@ class _HomePageState extends State<HomePage> {
                     icon: Icon(Icons.bar_chart),
                     label: Text('Grafik'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.indigo,
+                      backgroundColor: const Color.fromARGB(255, 14, 198, 180),
                       foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
