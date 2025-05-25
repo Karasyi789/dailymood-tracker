@@ -40,14 +40,14 @@ class _ChartPageState extends State<ChartPage> {
     final values = moodCount.values.toList();
 
     return Scaffold(
-      appBar: AppBar(title: Text('Grafik Mood')),
+      appBar: AppBar(title: Text('Grafik Mood'), centerTitle: true),
       body:
           moodCount.isEmpty
               ? Center(child: Text('Belum ada data untuk ditampilkan.'))
               : Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
                       'Statistik Mood Kamu',
@@ -55,6 +55,7 @@ class _ChartPageState extends State<ChartPage> {
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
+                      textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 16),
                     Expanded(

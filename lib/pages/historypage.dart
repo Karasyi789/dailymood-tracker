@@ -27,7 +27,7 @@ class _HistoryPageState extends State<HistoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Riwayat Mood')),
+      appBar: AppBar(title: Text('Riwayat Mood'), centerTitle: true),
       body:
           moodList.isEmpty
               ? Center(child: Text('Belum ada data mood.'))
@@ -45,7 +45,7 @@ class _HistoryPageState extends State<HistoryPage> {
                               split.length > 1 ? split[1] : 'Tidak diketahui';
                           return Chip(
                             label: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
