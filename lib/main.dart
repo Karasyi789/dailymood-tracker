@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'homepage.dart';
-import 'historypage.dart';
+import 'pages/homepage.dart';
+import 'pages/historypage.dart';
+import 'pages/grafik.dart';
 
 void main() {
   runApp(DailyMoodApp());
@@ -16,6 +17,7 @@ class DailyMoodApp extends StatelessWidget {
       routes: {
         '/': (context) => HomePage(),
         '/history': (context) => HistoryPage(),
+        '/chart': (context) => ChartPage(),
       },
     );
   }
