@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fl_chart/fl_chart.dart';
-import '../utills/date.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ChartPage extends StatefulWidget {
   @override
@@ -9,12 +8,7 @@ class ChartPage extends StatefulWidget {
 }
 
 class _ChartPageState extends State<ChartPage> {
-  Map<String, int> moodCounts = {
-    'Senang': 0,
-    'Sedih': 0,
-    'Stres': 0,
-    'Biasa Saja': 0,
-  };
+  Map<String, int> moodCount = {};
 
   @override
   void initState() {
@@ -22,73 +16,104 @@ class _ChartPageState extends State<ChartPage> {
     _loadMoodData();
   }
 
-  Future<void> _loadMoodData() async {
+  void _loadMoodData() async {
     final prefs = await SharedPreferences.getInstance();
-    final List<String> moodList = prefs.getStringList('moodList') ?? [];
+    final moodList = prefs.getStringList('moodList') ?? [];
 
-    final last7Days = DateTime.now().subtract(Duration(days: 7));
-
-    for (String item in moodList) {
-      final parts = item.split('|');
-      final date = DateTime.parse(parts[0]);
-      final mood = parts[1];
-
-      if (date.isAfter(last7Days)) {
-        moodCounts[mood] = (moodCounts[mood] ?? 0) + 1;
+    final counts = <String, int>{};
+    for (var entry in moodList) {
+      final parts = entry.split('|');
+      if (parts.length > 1) {
+        final mood = parts[1];
+        counts[mood] = (counts[mood] ?? 0) + 1;
       }
     }
 
-    setState(() {});
-  }
-
-  List<PieChartSectionData> getSections() {
-    final total = moodCounts.values.reduce((a, b) => a + b);
-
-    return moodCounts.entries.map((entry) {
-      final percentage = total == 0 ? 0.0 : (entry.value / total) * 100;
-      return PieChartSectionData(
-        color: _getMoodColor(entry.key),
-        value: percentage,
-        title: '${entry.key}\n${entry.value}',
-        radius: 60,
-        titleStyle: TextStyle(color: Colors.white, fontSize: 12),
-      );
-    }).toList();
-  }
-
-  Color _getMoodColor(String mood) {
-    switch (mood) {
-      case 'Senang':
-        return Colors.green;
-      case 'Sedih':
-        return Colors.blue;
-      case 'Stres':
-        return Colors.red;
-      case 'Biasa Saja':
-        return Colors.grey;
-      default:
-        return Colors.black;
-    }
+    setState(() {
+      moodCount = counts;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final moods = moodCount.keys.toList();
+    final values = moodCount.values.toList();
+
     return Scaffold(
-      appBar: AppBar(title: Text('Grafik Mood (7 Hari)')),
-      body: Center(
-        child: Padding(
-          padding: EdgeInsets.all(16),
-          child:
-              moodCounts.values.every((v) => v == 0)
-                  ? Text('Belum ada data mood dalam 7 hari terakhir.')
-                  : PieChart(
-                    PieChartData(
-                      sections: getSections(),
-                      centerSpaceRadius: 40,
+      appBar: AppBar(title: Text('Grafik Mood')),
+      body:
+          moodCount.isEmpty
+              ? Center(child: Text('Belum ada data untuk ditampilkan.'))
+              : Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Statistik Mood Kamu',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-        ),
-      ),
+                    const SizedBox(height: 16),
+                    Expanded(
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        elevation: 4,
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: BarChart(
+                            BarChartData(
+                              alignment: BarChartAlignment.spaceAround,
+                              maxY:
+                                  (values.reduce(
+                                    (a, b) => a > b ? a : b,
+                                  )).toDouble() +
+                                  1,
+                              barGroups: List.generate(
+                                moods.length,
+                                (i) => BarChartGroupData(
+                                  x: i,
+                                  barRods: [
+                                    BarChartRodData(
+                                      toY: values[i].toDouble(),
+                                      color: Colors.teal,
+                                      width: 20,
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              titlesData: FlTitlesData(
+                                bottomTitles: AxisTitles(
+                                  sideTitles: SideTitles(
+                                    showTitles: true,
+                                    getTitlesWidget: (value, _) {
+                                      if (value.toInt() < moods.length) {
+                                        return Text(
+                                          moods[value.toInt()],
+                                          style: TextStyle(fontSize: 10),
+                                        );
+                                      }
+                                      return Text('');
+                                    },
+                                  ),
+                                ),
+                                leftTitles: AxisTitles(
+                                  sideTitles: SideTitles(showTitles: true),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
     );
   }
 }

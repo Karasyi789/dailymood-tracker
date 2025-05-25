@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'pages/homepage.dart';
 import 'pages/historypage.dart';
 import 'pages/grafik.dart';
@@ -12,7 +13,15 @@ class DailyMoodApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Daily Mood Tracker',
-      theme: ThemeData(primarySwatch: Colors.blue),
+      theme: ThemeData(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color.fromARGB(255, 150, 240, 231),
+        ),
+        textTheme: GoogleFonts.poppinsTextTheme(),
+        scaffoldBackgroundColor: const Color.fromARGB(255, 164, 213, 213),
+      ),
+
       initialRoute: '/',
       routes: {
         '/': (context) => HomePage(),
